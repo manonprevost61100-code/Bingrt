@@ -1,0 +1,213 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===================== AUTH (NextAuth) =====================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+  createdAt     DateTime  @default(now())
+
+  accounts      Account[]
+  sessions      Session[]
+
+  watchStatuses WatchStatus[]
+  watchedEpisodes WatchedEpisode[]
+  ratings       Rating[]
+  userBadges    UserBadge[]
+  activities    Activity[]
+
+  following     Follow[]  @relation("Follower")
+  followedBy    Follow[]  @relation("Following")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ===================== CATALOGUE MEDIA =====================
+
+enum MediaType {
+  MOVIE
+  TV
+  ANIME
+}
+
+model MediaItem {
+  id           String    @id @default(cuid())
+  tmdbId       Int
+  type         MediaType
+  title        String
+  originalTitle String?
+  posterPath   String?
+  backdropPath String?
+  synopsis     String?   @db.Text
+  genres       String[]
+  releaseDate  DateTime?
+  totalSeasons Int?
+  totalEpisodes Int?
+  runtime      Int?      // minutes, pour les films
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  episodes      Episode[]
+  watchStatuses WatchStatus[]
+  ratings       Rating[]
+
+  @@unique([tmdbId, type])
+  @@index([type])
+}
+
+model Episode {
+  id            String    @id @default(cuid())
+  mediaItemId   String
+  mediaItem     MediaItem @relation(fields: [mediaItemId], references: [id], onDelete: Cascade)
+  seasonNumber  Int
+  episodeNumber Int
+  title         String?
+  airDate       DateTime?
+  runtime       Int?
+
+  watchedBy WatchedEpisode[]
+
+  @@unique([mediaItemId, seasonNumber, episodeNumber])
+  @@index([mediaItemId])
+}
+
+// ===================== SUIVI UTILISATEUR =====================
+
+enum WatchState {
+  WATCHING
+  COMPLETED
+  PLAN_TO_WATCH
+  DROPPED
+}
+
+model WatchStatus {
+  id          String     @id @default(cuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mediaItemId String
+  mediaItem   MediaItem  @relation(fields: [mediaItemId], references: [id], onDelete: Cascade)
+  state       WatchState
+  startedAt   DateTime?
+  completedAt DateTime?
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([userId, mediaItemId])
+  @@index([userId, state])
+}
+
+model WatchedEpisode {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  episodeId String
+  episode   Episode  @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  watchedAt DateTime @default(now())
+
+  @@unique([userId, episodeId])
+  @@index([userId])
+}
+
+model Rating {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mediaItemId String
+  mediaItem   MediaItem @relation(fields: [mediaItemId], references: [id], onDelete: Cascade)
+  score       Int       // 1-10
+  review      String?   @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([userId, mediaItemId])
+}
+
+// ===================== BADGES =====================
+
+model Badge {
+  id          String   @id @default(cuid())
+  code        String   @unique // ex: "TEN_SHOWS_COMPLETED"
+  name        String
+  description String
+  iconKey     String?  // référence vers une icône côté front
+
+  userBadges UserBadge[]
+}
+
+model UserBadge {
+  id       String   @id @default(cuid())
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId  String
+  badge    Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  earnedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+}
+
+// ===================== SOCIAL =====================
+
+model Follow {
+  id          String @id @default(cuid())
+  followerId  String
+  follower    User   @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String
+  following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
+  @@index([followingId])
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // "watched_episode" | "completed_show" | "earned_badge" | "rated"
+  payload   Json
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
