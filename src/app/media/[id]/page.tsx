@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { posterUrl, backdropUrl } from "@/lib/tmdb";
 import WatchStatusButtons from "@/components/WatchStatusButtons";
 import EpisodeCheckbox from "@/components/EpisodeCheckbox";
+import Link from "next/link";
 
 const KIND_LABEL: Record<string, string> = {
   MOVIE: "FILM",
@@ -51,6 +52,15 @@ export default async function MediaPage({
 
   return (
     <main className="min-h-screen pb-16">
+      <div className="px-6 pt-6">
+        <Link
+          href="/"
+          className="font-mono text-xs border border-stroke px-3 py-2 rounded-full text-slate hover:text-cream hover:border-cream transition-colors inline-block"
+        >
+          ← Accueil
+        </Link>
+      </div>
+
       {media.backdropPath && (
         <div
           className="h-56 bg-cover bg-center relative"

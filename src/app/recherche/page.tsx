@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { posterUrl } from "@/lib/tmdb";
 
 type SearchResult = {
@@ -74,6 +75,12 @@ export default function RecherchePage() {
 
   return (
     <main className="min-h-screen px-6 py-8 max-w-2xl mx-auto">
+      <Link
+        href="/"
+        className="font-mono text-xs border border-stroke px-3 py-2 rounded-full text-slate hover:text-cream hover:border-cream transition-colors inline-block mb-4"
+      >
+        ← Accueil
+      </Link>
       <h1 className="font-display text-3xl uppercase mb-4">Recherche</h1>
 
       <input
