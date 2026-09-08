@@ -207,7 +207,7 @@ export default async function HomePage() {
               <Link
                 key={ep.id}
                 href={`/media/${ep.mediaItemId}`}
-                className="flex items-center justify-between bg-panel-2 border border-stroke rounded-xl px-4 py-3"
+                className="ticket flex items-center justify-between bg-panel-2 border border-stroke rounded-xl px-4 py-3"
               >
                 <div>
                   <p className="font-bold text-[12.5px]">{ep.mediaItem.title}</p>

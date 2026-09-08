@@ -1,3 +1,63 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ----- Micro-animations : transitions douces sur toute l'app ----- */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+main {
+  animation: fadeIn 0.4s ease;
+}
+
+a, button {
+  transition: transform 0.15s ease, opacity 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+a:hover, button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: scale(0.96);
+  transition: transform 0.08s ease;
+}
+
+img {
+  transition: transform 0.35s ease;
+}
+
+/* Les cartes qui utilisent group/group-hover (posters de la recherche et de l'accueil) profitent deja de group-hover:scale-105 ; on adoucit juste la vitesse par defaut ci-dessus. */
+
+.bg-panel-2 {
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+/* ----- Effet ticket perforé (repris des maquettes) ----- */
+
+.ticket {
+  position: relative;
+}
+
+.ticket::before,
+.ticket::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #0E0E14;
+  border: 1px solid #2B2B38;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ticket::before {
+  left: -8px;
+}
+
+.ticket::after {
+  right: -8px;
+}
