@@ -92,6 +92,12 @@ export default async function HomePage() {
         </div>
         <div className="flex items-center gap-2">
           <Link
+            href="/social"
+            className="font-mono text-xs border border-stroke px-3 py-2 rounded-full text-slate hover:text-cream hover:border-cream transition-colors"
+          >
+            👥
+          </Link>
+          <Link
             href="/profil"
             className="font-mono text-xs border border-stroke px-3 py-2 rounded-full text-slate hover:text-cream hover:border-cream transition-colors"
           >

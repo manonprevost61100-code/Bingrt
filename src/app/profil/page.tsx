@@ -15,14 +15,13 @@ export default async function ProfilPage() {
     select: { createdAt: true },
   });
 
-  // Tous les épisodes vus par l'utilisateur, avec le média associé (pour le runtime et les genres)
   const watchedEpisodes = await prisma.watchedEpisode.findMany({
     where: { userId },
     include: { episode: { include: { mediaItem: true } } },
   });
 
   const totalMinutes = watchedEpisodes.reduce(
-    (sum, w) => sum + (w.episode.runtime ?? 24), // 24 min par défaut si inconnu
+    (sum, w) => sum + (w.episode.runtime ?? 24),
     0
   );
   const totalHours = Math.round(totalMinutes / 60);
@@ -31,7 +30,6 @@ export default async function ProfilPage() {
     where: { userId, state: "COMPLETED" },
   });
 
-  // Répartition des genres, pondérée par nombre d'épisodes vus par média
   const genreCounts = new Map<string, number>();
   for (const w of watchedEpisodes) {
     for (const genre of w.episode.mediaItem.genres) {
@@ -49,14 +47,13 @@ export default async function ProfilPage() {
 
   const GENRE_COLORS = ["#FF4E86", "#F5A544", "#3FBFA6", "#9391A3", "#F4EFE6"];
 
-  // ----- Stats pour les badges (calcul à la volée, pas d'écriture en base) -----
   const completedAnimeCount = await prisma.watchStatus.count({
     where: { userId, state: "COMPLETED", mediaItem: { type: "ANIME" } },
   });
 
   const episodesByDay = new Map<string, number>();
   for (const w of watchedEpisodes) {
-    const day = w.watchedAt.toISOString().slice(0, 10); // YYYY-MM-DD
+    const day = w.watchedAt.toISOString().slice(0, 10);
     episodesByDay.set(day, (episodesByDay.get(day) ?? 0) + 1);
   }
   const maxEpisodesWatchedInOneDay = Math.max(0, ...episodesByDay.values());
@@ -81,6 +78,12 @@ export default async function ProfilPage() {
         className="font-mono text-xs border border-stroke px-3 py-2 rounded-full text-slate hover:text-cream hover:border-cream transition-colors inline-block mb-6"
       >
         ← Accueil
+      </Link>
+      <Link
+        href="/wrapped"
+        className="font-mono text-xs bg-magenta text-void font-bold px-3 py-2 rounded-full inline-block mb-6 ml-2"
+      >
+        ✨ Voir mon Wrapped
       </Link>
 
       <div className="text-center mb-8">
