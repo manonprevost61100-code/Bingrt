@@ -91,7 +91,7 @@ export default async function ProfilPage() {
           className="w-16 h-16 rounded-full mx-auto mb-3"
           style={{ background: "linear-gradient(135deg, #FF4E86, #F5A544)" }}
         />
-        <h1 className="font-display text-2xl uppercase">
+        <h1 className="font-display text-3xl uppercase">
           {session.user.name ?? "Toi"}
         </h1>
         <p className="font-mono text-[11px] text-slate">

@@ -84,7 +84,7 @@ export default async function MediaPage({
           ) : null}
         </div>
         <div className="pb-1">
-          <p className="font-mono text-[10px] text-magenta tracking-wide">
+         <p className="font-mono text-[11px] text-magenta tracking-wide">
             {KIND_LABEL[media.type]}
             {media.releaseDate ? ` · ${media.releaseDate.getFullYear()}` : ""}
           </p>

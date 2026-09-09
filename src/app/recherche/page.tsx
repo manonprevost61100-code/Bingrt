@@ -74,7 +74,7 @@ export default function RecherchePage() {
   const filtered = results.filter((r) => filter === "ALL" || r.kind === filter);
 
   return (
-    <main className="min-h-screen px-6 py-8 max-w-2xl mx-auto">
+    <main className="min-h-screen px-6 py-8 pb-16 max-w-2xl mx-auto">
       <Link
         href="/"
         className="font-mono text-xs border border-stroke px-3 py-2 rounded-full text-slate hover:text-cream hover:border-cream transition-colors inline-block mb-4"
