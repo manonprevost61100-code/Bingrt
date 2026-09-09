@@ -32,6 +32,17 @@ export default async function MediaPage({
    const existingRating = await prisma.rating.findUnique({
   where: { userId_mediaItemId: { userId: session.user.id, mediaItemId: params.id } },
   });
+   const followingIds = (await prisma.follow.findMany({
+  where: { followerId: session.user.id },
+  select: { followingId: true },
+})).map(function (f) {
+  return f.followingId;
+});
+
+const friendsRatings = await prisma.rating.findMany({
+  where: { mediaItemId: params.id, userId: { in: followingIds } },
+  include: { user: { select: { name: true } } },
+});
   if (!media) notFound();
 
   const watchedEpisodeIds = new Set(
@@ -127,6 +138,23 @@ export default async function MediaPage({
     initialReview={existingRating ? existingRating.review : null}
           />
        </div>
+{friendsRatings.length > 0 && (
+  <div className="px-6 mt-5">
+    <p className="font-mono text-[11px] text-teal uppercase tracking-wide mb-2">
+      Notes de tes amis
+    </p>
+    <div className="space-y-1">
+      {friendsRatings.map(function (r) {
+        return (
+          <div key={r.id} className="flex items-center justify-between text-[12.5px]">
+            <span className="font-bold">{r.user.name}</span>
+            <span className="font-mono text-amber">{r.score}/10</span>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+)}
       {media.episodes.length > 0 && (
         <div className="px-6 mt-8">
           {seasons.map((seasonNumber) => {
@@ -138,7 +166,7 @@ export default async function MediaPage({
             ).length;
 
             return (
-              <div key={seasonNumber} className="mb-8">
+              <div key={seasonNumber} className="mb-8 group">
                 <div className="flex items-center justify-between mb-3">
                   <p className="font-mono text-[11px] text-teal uppercase tracking-wide">
                     Saison {seasonNumber}
@@ -147,7 +175,7 @@ export default async function MediaPage({
                     {seasonWatched} / {seasonEpisodes.length} vus
                   </p>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 hidden group-hover:block">
                   {seasonEpisodes.map((ep) => (
                     <div
                       key={ep.id}
