@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { posterUrl, backdropUrl } from "@/lib/tmdb";
 import WatchStatusButtons from "@/components/WatchStatusButtons";
 import EpisodeCheckbox from "@/components/EpisodeCheckbox";
+import RatingInput from "@/components/RatingInput";
 import Link from "next/link";
 
 const KIND_LABEL: Record<string, string> = {
@@ -28,6 +29,9 @@ export default async function MediaPage({
     },
   });
 
+   const existingRating = await prisma.rating.findUnique({
+  where: { userId_mediaItemId: { userId: session.user.id, mediaItemId: params.id } },
+  });
   if (!media) notFound();
 
   const watchedEpisodeIds = new Set(
@@ -115,7 +119,14 @@ export default async function MediaPage({
           initialState={media.watchStatuses[0]?.state ?? null}
         />
       </div>
-
+      
+       <div className="px-6 mt-5">
+  <      RatingInput
+    mediaId={media.id}
+    initialScore={existingRating ? existingRating.score : null}
+    initialReview={existingRating ? existingRating.review : null}
+          />
+       </div>
       {media.episodes.length > 0 && (
         <div className="px-6 mt-8">
           {seasons.map((seasonNumber) => {
