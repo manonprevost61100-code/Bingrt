@@ -87,7 +87,7 @@ export default async function SocialPage() {
               return (
                 <div
                   key={a.id}
-                  className="flex items-center gap-3 bg-panel-2 border border-stroke rounded-xl px-4 py-3"
+                  className="ticket flex items-center gap-3 bg-panel-2 border border-stroke rounded-xl px-4 py-3"
                 >
                   <div className="w-8 h-8 rounded-full bg-panel shrink-0" />
                   <p className="text-[12.5px] flex-1">

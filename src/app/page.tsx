@@ -240,23 +240,31 @@ export default async function HomePage() {
             Ton activité apparaîtra ici au fil de tes visionnages.
           </p>
         ) : (
-          <div className="space-y-1">
-            {recentActivity.map((a) => (
-              <p key={a.id} className="text-[12.5px] text-slate py-1.5">
-                {a.type === "watched_episode" && "Épisode marqué comme vu"}
-                {a.type === "completed_show" && "Titre marqué comme terminé"}
-                {a.type === "status_updated" && "Statut de visionnage mis à jour"}
-                <span className="font-mono text-[10px] text-stroke ml-2">
-                  {a.createdAt.toLocaleDateString("fr-FR", {
-                    day: "numeric",
-                    month: "short",
-                  })}
-                </span>
-              </p>
-            ))}
-          </div>
-        )}
-      </section>
-    </main>
+         <div className="space-y-2">
+  {recentActivity.map(function (a) {
+    let label = "";
+    if (a.type === "watched_episode") label = "Episode marque comme vu";
+    if (a.type === "completed_show") label = "Titre marque comme termine";
+    if (a.type === "status_updated") label = "Statut de visionnage mis a jour";
+
+    return (
+      <div
+        key={a.id}
+        className="ticket flex items-center justify-between bg-panel-2 border border-stroke rounded-xl px-4 py-3"
+      >
+        <p className="text-[12.5px] text-slate">{label}</p>
+        <span className="font-mono text-[10px] text-stroke">
+          {a.createdAt.toLocaleDateString("fr-FR", {
+            day: "numeric",
+            month: "short",
+          })}
+        </span>
+            </div>
+    );
+  })}
+            </div>
+    )}
+  </section>
+</main>
   );
 }
