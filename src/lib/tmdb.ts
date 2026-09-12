@@ -26,7 +26,11 @@ function tmdbFetch(path: string, params: Record<string, string> = {}) {
 }
 
 export type MediaKind = "MOVIE" | "TV" | "ANIME";
-
+export type TmdbSeason = {
+  seasonNumber: number;
+  episodeCount: number;
+  name: string;
+};
 function inferKind(item: any, mediaType: "movie" | "tv"): MediaKind {
   const isAnimation = item.genre_ids?.includes(ANIMATION_GENRE_ID);
   const isJapanese =
@@ -90,11 +94,13 @@ export async function getTvDetails(tmdbId: number) {
     releaseDate: d.first_air_date || null,
     totalSeasons: d.number_of_seasons,
     totalEpisodes: d.number_of_episodes,
-    seasons: (d.seasons ?? []).map((s: any) => ({
-      seasonNumber: s.season_number,
-      episodeCount: s.episode_count,
-      name: s.name,
-    })),
+          seasons: ((d.seasons ?? []) as any[]).map(
+      (s: any): TmdbSeason => ({
+        seasonNumber: s.season_number,
+        episodeCount: s.episode_count,
+        name: s.name,
+      })
+    ),
   };
 }
 
@@ -108,17 +114,4 @@ export async function getSeasonEpisodes(tmdbId: number, seasonNumber: number) {
     airDate: ep.air_date || null,
     runtime: ep.runtime ?? null,
   }));
-}
-
-/** Séries dont un nouvel épisode sort dans les prochains jours (pour le calendrier). */
-export async function getUpcomingEpisodesForShow(tmdbId: number) {
-  const d = await tmdbFetch(`/tv/${tmdbId}`);
-  return d.next_episode_to_air
-    ? {
-        seasonNumber: d.next_episode_to_air.season_number,
-        episodeNumber: d.next_episode_to_air.episode_number,
-        airDate: d.next_episode_to_air.air_date,
-        title: d.next_episode_to_air.name,
-      }
-    : null;
 }

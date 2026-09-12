@@ -53,7 +53,10 @@ export default function SocialSearch() {
           {results.map(function (u) {
             return (
               <div key={u.id} className="flex items-center gap-3 py-2">
-                <div className="w-9 h-9 rounded-full bg-panel-2 shrink-0" />
+                <div
+                 className="w-9 h-9 rounded-full shrink-0"
+                  style={{ background: "linear-gradient(135deg, #FF4E86, #F5A544)" }}
+                />
                 <p className="font-bold text-[13px] flex-1">{u.name}</p>
                 <FollowButton userId={u.id} initialFollowing={u.isFollowing} />
               </div>

@@ -56,7 +56,10 @@ export default async function SocialPage() {
                   key={f.followingId}
                   className="flex items-center gap-3 py-2"
                 >
-                  <div className="w-9 h-9 rounded-full bg-panel-2 shrink-0" />
+                  <div
+                    className="w-9 h-9 rounded-full shrink-0"
+                    style={{ background: "linear-gradient(135deg, #FF4E86, #F5A544)" }}
+                  />
                   <p className="font-bold text-[13px] flex-1">
                     {f.following.name}
                   </p>
@@ -89,7 +92,10 @@ export default async function SocialPage() {
                   key={a.id}
                   className="ticket flex items-center gap-3 bg-panel-2 border border-stroke rounded-xl px-4 py-3"
                 >
-                  <div className="w-8 h-8 rounded-full bg-panel shrink-0" />
+                  <div
+                    className="w-8 h-8 rounded-full shrink-0"
+                    style={{ background: "linear-gradient(135deg, #FF4E86, #F5A544)" }}
+                  />
                   <p className="text-[12.5px] flex-1">
                     <span className="font-bold">{a.user.name}</span>{" "}
                     <span className="text-slate">{label}</span>

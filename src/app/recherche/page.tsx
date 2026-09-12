@@ -26,6 +26,13 @@ const KIND_COLOR: Record<SearchResult["kind"], string> = {
   ANIME: "text-magenta",
 };
 
+const FILTER_COLOR: Record<"ALL" | SearchResult["kind"], string> = {
+  ALL: "border-cream text-cream",
+  TV: "border-teal text-teal",
+  MOVIE: "border-amber text-amber",
+  ANIME: "border-magenta text-magenta",
+};
+
 export default function RecherchePage() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -91,16 +98,16 @@ export default function RecherchePage() {
       />
 
       <div className="flex gap-2 mb-6">
-        {(["ALL", "TV", "MOVIE", "ANIME"] as const).map((k) => (
-          <button
-            key={k}
-            onClick={() => setFilter(k)}
-            className={`font-mono text-xs px-3 py-1.5 rounded-full border transition-colors ${
-              filter === k
-                ? "bg-cream text-void border-cream font-bold"
-                : "border-stroke text-slate hover:text-cream"
-            }`}
-          >
+       {(["ALL", "TV", "MOVIE", "ANIME"] as const).map((k) => (
+         <button
+          key={k}
+           onClick={() => setFilter(k)}
+           className={`font-mono text-xs px-3 py-1.5 rounded-full border-2 transition-colors ${
+            filter === k
+            ? `${FILTER_COLOR[k]} font-bold bg-transparent`
+            : "border-stroke text-slate hover:text-cream"
+          }`}
+     >
             {k === "ALL" ? "Tout" : k === "TV" ? "Séries" : k === "MOVIE" ? "Films" : "Animes"}
           </button>
         ))}
