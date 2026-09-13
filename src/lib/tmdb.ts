@@ -113,5 +113,27 @@ export async function getSeasonEpisodes(tmdbId: number, seasonNumber: number) {
     title: ep.name,
     airDate: ep.air_date || null,
     runtime: ep.runtime ?? null,
+     }));
+}
+
+/** Recommandations basées sur un film que l'utilisateur a aimé. */
+export async function getMovieRecommendations(tmdbId: number) {
+  const data = await tmdbFetch(`/movie/${tmdbId}/recommendations`);
+  return (data.results as any[]).map((r) => ({
+    tmdbId: r.id,
+    kind: inferKind(r, "movie"),
+    title: r.title,
+    posterPath: r.poster_path,
+  }));
+}
+
+/** Recommandations basées sur une série/anime que l'utilisateur a aimé. */
+export async function getTvRecommendations(tmdbId: number) {
+  const data = await tmdbFetch(`/tv/${tmdbId}/recommendations`);
+  return (data.results as any[]).map((r) => ({
+    tmdbId: r.id,
+    kind: inferKind(r, "tv"),
+    title: r.name,
+    posterPath: r.poster_path,
   }));
 }

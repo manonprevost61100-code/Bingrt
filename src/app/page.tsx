@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { posterUrl } from "@/lib/tmdb";
 import Link from "next/link";
+import RecommendationRow from "@/components/RecommendationRow";
 
 const KIND_LABEL: Record<string, string> = {
   MOVIE: "FILM",
@@ -227,7 +228,10 @@ export default async function HomePage() {
             ))}
           </div>
         )}
-      </section>
+            </section>
+
+      {/* ----- Pour toi ----- */}
+      <RecommendationRow />
 
       {/* ----- Activité récente ----- */}
       <section>
