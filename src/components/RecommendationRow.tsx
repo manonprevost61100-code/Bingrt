@@ -11,6 +11,12 @@ type Recommendation = {
   posterPath: string | null;
 };
 
+const KIND_LABEL: Record<Recommendation["kind"], string> = {
+  MOVIE: "FILM",
+  TV: "SÉRIE",
+  ANIME: "ANIME",
+};
+
 const KIND_COLOR: Record<Recommendation["kind"], string> = {
   MOVIE: "#F5A544",
   TV: "#3FBFA6",
@@ -80,6 +86,12 @@ export default function RecommendationRow() {
                   className="w-full h-full object-cover"
                 />
               )}
+              <span
+                className="absolute top-2 left-2 font-mono text-[9px] px-1.5 py-0.5 rounded bg-black/60"
+                style={{ color: KIND_COLOR[rec.kind] }}
+              >
+                {KIND_LABEL[rec.kind]}
+              </span>
               {importingId === rec.tmdbId && (
                 <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                   <span className="font-mono text-[10px] text-cream">
