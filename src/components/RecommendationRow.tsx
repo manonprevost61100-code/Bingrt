@@ -48,14 +48,22 @@ export default function RecommendationRow() {
     }
   }
 
-  if (loading || recs.length === 0) return null;
+    if (loading) return null;
 
   return (
     <section className="mb-10">
       <p className="font-mono text-[11px] text-amber uppercase tracking-wide mb-3">
         Pour toi
       </p>
+
+      {recs.length === 0 ? (
+        <p className="text-slate text-sm">
+          Note un titre que tu as regardé (7/10 ou plus) pour débloquer des
+          recommandations personnalisées.
+        </p>
+      ) : (
       <div className="flex gap-3 overflow-x-auto pb-2">
+        
         {recs.map((rec) => (
           <button
             key={`${rec.kind}-${rec.tmdbId}`}
@@ -84,8 +92,9 @@ export default function RecommendationRow() {
               {rec.title}
             </p>
           </button>
-        ))}
+                ))}
       </div>
+      )}
     </section>
   );
 }
