@@ -25,6 +25,7 @@ model User {
   ratings       Rating[]
   userBadges    UserBadge[]
   activities    Activity[]
+  notifications Notification[]
 
   following     Follow[]  @relation("Follower")
   followedBy    Follow[]  @relation("Following")
@@ -109,6 +110,7 @@ model Episode {
   runtime       Int?
 
   watchedBy WatchedEpisode[]
+  notifications Notification[]
 
   @@unique([mediaItemId, seasonNumber, episodeNumber])
   @@index([mediaItemId])
@@ -210,4 +212,16 @@ model Activity {
   createdAt DateTime @default(now())
 
   @@index([userId, createdAt])
+}
+model Notification {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  episodeId   String
+  episode     Episode   @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  read        Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+
+  @@unique([userId, episodeId])
+  @@index([userId, read])
 }

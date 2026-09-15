@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { posterUrl } from "@/lib/tmdb";
 import Link from "next/link";
 import RecommendationRow from "@/components/RecommendationRow";
+import NotificationBell from "@/components/NotificationBell";
 
 const KIND_LABEL: Record<string, string> = {
   MOVIE: "FILM",
@@ -92,6 +93,7 @@ export default async function HomePage() {
           <h1 className="font-display text-3xl uppercase">Ton Bingr</h1>
         </div>
         <div className="flex items-center gap-2">
+          <NotificationBell />
           <Link
             href="/social"
             className="font-mono text-xs border border-stroke px-3 py-2 rounded-full text-slate hover:text-cream hover:border-cream transition-colors"
